@@ -25,9 +25,9 @@ class named_model:
 class hyperparam_tuner:
 	""" tunes hyperparameters of a model """
 	def __init__(
-		callbacks = None,
 		model: named_model,
 		suggest_params_fn: Callable,
+		callbacks = None,
 		use_past_cov: bool = False,
 		use_futu_cov: bool = False,
 		max_samples_per_ts: int = 1000,
