@@ -89,7 +89,7 @@ class hyperparam_tuner:
 		""" trial is an optuna object """
 		callback = [PyTorchLightningPruningCallback(trial, monitor="train_loss")]
 
-		variable_params = self.suggest_params_fn()
+		variable_params = self.suggest_params_fn(trial)
 
 		self.model = self.fit_model(
 			series=series,
