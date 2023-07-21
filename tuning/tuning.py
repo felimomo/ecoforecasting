@@ -46,10 +46,10 @@ class hyperparam_tuner:
 		self.num_workers = num_workers
 
 		self.pl_trainer_kwargs = {
-            "accelerator": "gpu",
-            "devices": [0],
-            "callbacks": self.callbacks,
-        }
+			"accelerator": "gpu",
+			"devices": [0],
+			"callbacks": self.callbacks,
+		}
 	
 	def fit_model(
 		self,
@@ -68,24 +68,24 @@ class hyperparam_tuner:
 		"""
 
 		# reproducibility
-    torch.manual_seed(42)
+		torch.manual_seed(42)
 
-    self.model(
-    	model_name=self.model_name,
-    	force_reset=True,
-    	save_checkpoints=True,
-    	pl_trainer_kwargs=self.pl_trainer_kwargs,
-    	**self.static_hyperparams,
-    	**variable_hyperparams,
-    	**model_kwargs,
-    ).fit(
-    	series = series,
-    	max_samples_per_ts = self.max_samples_per_ts,
-    	num_loader_workers = self.num_workers,
-    	**fit_kwargs,
-    )
+		self.model(
+			model_name=self.model_name,
+			force_reset=True,
+			save_checkpoints=True,
+			pl_trainer_kwargs=self.pl_trainer_kwargs,
+			**self.static_hyperparams,
+			**variable_hyperparams,
+			**model_kwargs,
+		).fit(
+			series = series,
+			max_samples_per_ts = self.max_samples_per_ts,
+			num_loader_workers = self.num_workers,
+			**fit_kwargs,
+		)
 
-    return self.model
+		return self.model
 
 
 	def objective(self, trial, series, val_series, **fit_kwargs, **model_kwargs):
