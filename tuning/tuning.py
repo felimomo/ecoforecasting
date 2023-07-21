@@ -7,7 +7,7 @@ from darts.metrics import marre, mse
 from darts.models.forecasting.forecasting_model import ForecastingModel # the base forecasting model class
 
 from dataclasses import dataclass
-from typing import callable
+from typing import Callable
 
 import optuna
 from optuna.integration import PyTorchLightningPruningCallback
