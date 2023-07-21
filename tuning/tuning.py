@@ -50,20 +50,23 @@ class hyperparam_tuner:
 		self,
 		series,
 		variable_hyperparams: dict, 
-		**fit_kwargs, 
-		**model_kwargs,
+		**kwargs,
 	):
 		"""
 		fits self.model to a series, optionally with covariates given as
-		model_kwargs:
-			add_encoders: dict (see Darts models docs for format)
-		fit_kwargs:
-			future_covariates: series
-			past_covariates: series
+		kwargs:
+			model_kwargs:
+				add_encoders: dict (see Darts models docs for format)
+			fit_kwargs:
+				future_covariates: series
+				past_covariates: series
 		"""
 
 		# reproducibility
 		torch.manual_seed(42)
+
+		model_kwargs = kwargs.get("model_kwargs", {})
+		fit_kwargs = kwargs.get("fit_kwargs", {})
 
 		self.model(
 			model_name=self.model_name,
