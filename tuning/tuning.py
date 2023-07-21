@@ -86,7 +86,7 @@ class hyperparam_tuner:
 		return self.model
 
 
-	def objective(self, trial, series, val_series, **fit_kwargs, **model_kwargs):
+	def objective(self, trial, series, val_series, **kwargs):
 		""" trial is an optuna object """
 		callback = [PyTorchLightningPruningCallback(trial, monitor="train_loss")]
 
@@ -95,8 +95,7 @@ class hyperparam_tuner:
 		self.model = self.fit_model(
 			series=series,
 			variable_hyperparams=variable_hyperparams, 
-			**fit_kwargs, 
-			**model_kwargs,
+			**kwargs,
 		)
 
 		preds = self.model.predict(series = series, n = len(val_series) )
