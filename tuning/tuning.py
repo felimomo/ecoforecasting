@@ -22,11 +22,6 @@ class named_model:
 	model: ForecastingModel
 	model_name: str
 
-@dataclass
-class series_data:
-	main_series: TimeSeries
-	covariates
-
 class hyperparam_tuner:
 	""" tunes hyperparameters of a model """
 	def __init__(
