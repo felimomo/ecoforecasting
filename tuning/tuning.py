@@ -27,14 +27,13 @@ class hyperparam_tuner:
 	def __init__(
 		model: named_model,
 		suggest_params_fn: Callable,
+		static_hyperparams: dict,
 		callbacks = None,
-		use_past_cov: bool = False,
-		use_futu_cov: bool = False,
 		max_samples_per_ts: int = 1000,
 		num_workers: int = 4,
 	):
-		self.model = model # model whose hyperparams are tuned
-		self.model_name = model_name
+		self.model = model.model # model whose hyperparams are tuned
+		self.model_name = model.model_name
 		self.callbacks = callbacks
 		self.static_hyperparams = static_hyperparams
 		self.max_samples_per_ts = max_samples_per_ts
