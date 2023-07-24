@@ -15,7 +15,7 @@ from optuna.integration import PyTorchLightningPruningCallback
 from pytorch_lightning.callbacks import Callback, EarlyStopping
 import torch
 
-from DataProcessing import NOAA_stage3_scan, day_mean_several, quick_neon_series, get_noaa
+from data_processing import NOAA_stage3_scan, day_mean_several, quick_neon_series, get_noaa
 
 @dataclass
 class named_model:
