@@ -4,6 +4,7 @@
 def TranformerSugg(trial):
 	""" darts.models.TransformerModel """
 	return {
+		"output_chunk_length": trial.suggest_int("output_chunk_length", 15, 35)
 		"d_model": trial.suggest_int("d_model", 56, 72),
 		"nhead": trial.suggest_categorical("nhead", [2, 4]),
 		"num_encoder_layers": trial.suggest_int("num_encoder_layers", 2, 4),
