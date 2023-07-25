@@ -28,13 +28,11 @@ class hyperparam_tuner:
 		model: named_model,
 		suggest_params_fn: Callable,
 		static_hyperparams: dict,
-		callbacks = None,
 		max_samples_per_ts: int = 1000,
 		num_workers: int = 4,
 	):
 		self.model = model.model # model whose hyperparams are tuned
 		self.model_name = model.model_name
-		self.callbacks = callbacks
 		self.static_hyperparams = static_hyperparams
 		self.max_samples_per_ts = max_samples_per_ts
 		self.num_workers = num_workers
@@ -42,7 +40,7 @@ class hyperparam_tuner:
 		self.pl_trainer_kwargs = {
 			"accelerator": "gpu",
 			"devices": [0],
-			"callbacks": self.callbacks,
+			"callbacks": None,
 		}
 	
 	def fit_model(
@@ -87,16 +85,23 @@ class hyperparam_tuner:
 
 	def objective(self, trial, series, val_series, **kwargs):
 		""" trial is an optuna object """
-		callback = [PyTorchLightningPruningCallback(trial, monitor="train_loss")]
 
+		# callbacks
+		early_stopper = EarlyStopping("train_loss", min_delta=0.0001, patience=5, verbose=True)
+		callback = [early_stopper] + [PyTorchLightningPruningCallback(trial, monitor="train_loss")]
+		self.pl_trainer_kwargs["callbacks"] = callback
+
+		# trial hyperparm suggestion
 		variable_params = self.suggest_params_fn(trial)
 
+		# fit
 		self.model = self.fit_model(
 			series=series,
 			variable_hyperparams=variable_hyperparams, 
 			**kwargs,
 		)
 
+		# eval
 		preds = self.model.predict(series = series, n = len(val_series) )
 		metric_values = mse(val_series, preds, n_jobs=-1, verbose=True)
 		mean_metric_value = np.mean(metric_values)
