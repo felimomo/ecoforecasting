@@ -1,11 +1,40 @@
 from ecoforecasting.tuning import hyperparam_tuner, named_model
 from ecoforecasting.params_suggestions import TranformerSugg
+from ecoforecasting.data_processing import NOAA_stage3_scan, day_mean_several, quick_neon_series, get_noaa
 
 from pytorch_lightning.callbacks import Callback, EarlyStopping
 
 from darts.models import TransformerModel
 
-# fixed hyperparams
+import optuna
+import pandas as pd
+
+# data globals
+
+AQUATICS = "https://data.ecoforecast.org/neon4cast-targets/aquatics/aquatics-expanded-observations.csv.gz"
+TERRESTRIAL = "https://data.ecoforecast.org/neon4cast-targets/terrestrial_30min/terrestrial_30min-targets.csv.gz"
+TICK = "https://data.ecoforecast.org/neon4cast-targets/ticks/ticks-targets.csv.gz"
+PHENOLOGY = "https://data.ecoforecast.org/neon4cast-targets/phenology/phenology-targets.csv.gz"
+BEETLE = "https://data.ecoforecast.org/neon4cast-targets/beetles/beetles-targets.csv.gz"
+
+konz = quick_neon_series(
+    site_id = "KONZ",
+    link = TERRESTRIAL,
+    freq = "D",
+    time_col = "datetime",
+    day_avg= True,
+)
+
+
+noaa_covariates = get_noaa(site_id = "KONZ")
+
+date_cutoff = pd.Timestamp("2023-06-24")
+PAST_COVARIATES, FUTURE_COVARIATES = noaa_covariates.split_before(date_cutoff)
+SERIES, VAL_SERIES = konz.split_before(date_cutoff)
+
+
+# fixed hyperparams, other globals
+
 STATIC_PARAMS = {
 	"batch_size": 1024,
 	"max_n_epochs": 70,
@@ -13,6 +42,13 @@ STATIC_PARAMS = {
 	"max_samples_per_ts": 1000,
 	"input_chunk_length": 356,
 }
+
+ADD_ENCODERS={
+	'cyclic': {'future': ['month']},
+}
+
+MODEL_KWARGS = {"add_encoders": ADD_ENCODERS}
+FIT_KWARGS = {"past_covariates": PAST_COVARIATES}
 
 # initializing objects
 
@@ -23,3 +59,8 @@ transformer_tuner = hyperparam_tuner(
 	suggest_params_fn=TranformerSugg,
 	static_hyperparams=STATIC_PARAMS,
 )
+
+obj_wrapper = lambda trial: transformer_tuner.objective(trial, SERIES, VAL_SERIES, model_kwargs=MODEL_KWARGS, fit_kwargs=FIT_KWARGS)
+
+study = optuna.create_study(direction="minimize")
+study.optimize(objective, timeout=7200, callbacks=None)  
