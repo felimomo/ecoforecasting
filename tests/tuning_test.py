@@ -6,7 +6,7 @@ from pytorch_lightning.callbacks import Callback, EarlyStopping
 from darts.models import TransformerModel
 
 # fixed hyperparams
-STATIIC_PARAMS = {
+STATIC_PARAMS = {
 	"batch_size": 1024,
 	"max_n_epochs": 70,
 	"nr_epochs_val_period": 1,
@@ -16,10 +16,11 @@ STATIIC_PARAMS = {
 
 # initializing objects
 
-transformer = named_model(model=TransformerModel, model_name="TransformerModel")
-print(transformer)
+# transformer = named_model(model=TransformerModel, model_name="TransformerModel")
+# print(transformer)
 transformer_tuner = hyperparam_tuner(
-	model=transformer,
+	model=TransformerModel,
+	model_name="TransformerModel",
 	suggest_params_fn=TranformerSugg,
-	static_hyperparams=STATIIC_PARAMS,
+	static_hyperparams=STATIC_PARAMS,
 )
