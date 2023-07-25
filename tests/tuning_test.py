@@ -16,11 +16,10 @@ STATIC_PARAMS = {
 
 # initializing objects
 
-# transformer = named_model(model=TransformerModel, model_name="TransformerModel")
+transformer = named_model(model=TransformerModel, model_name="TransformerModel")
 # print(transformer)
 transformer_tuner = hyperparam_tuner(
-	model=TransformerModel,
-	model_name="TransformerModel",
+	model=transformer,
 	suggest_params_fn=TranformerSugg,
 	static_hyperparams=STATIC_PARAMS,
 )
