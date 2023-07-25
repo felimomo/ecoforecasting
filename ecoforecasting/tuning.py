@@ -22,17 +22,23 @@ class named_model:
 	model: ForecastingModel
 	model_name: str
 
+
+
 class hyperparam_tuner:
 	""" tunes hyperparameters of a model """
 	def __init__(
-		model: named_model,
+		# model: named_model,
+		model: ForecastingModel,
+		model_name: str,
 		suggest_params_fn: Callable,
 		static_hyperparams: dict,
 		max_samples_per_ts: int = 1000,
 		num_workers: int = 4,
 	):
-		self.model = model.model # model whose hyperparams are tuned
-		self.model_name = model.model_name
+		# self.model = model.model # model whose hyperparams are tuned
+		# self.model_name = model.model_name
+		self.model = model
+		self.model_name = model_name
 		self.static_hyperparams = static_hyperparams
 		self.max_samples_per_ts = max_samples_per_ts
 		self.num_workers = num_workers
