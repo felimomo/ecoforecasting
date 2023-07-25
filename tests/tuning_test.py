@@ -63,4 +63,4 @@ transformer_tuner = hyperparam_tuner(
 obj_wrapper = lambda trial: transformer_tuner.objective(trial, SERIES, VAL_SERIES, model_kwargs=MODEL_KWARGS, fit_kwargs=FIT_KWARGS)
 
 study = optuna.create_study(direction="minimize")
-study.optimize(objective, timeout=7200, callbacks=None)  
+study.optimize(obj_wrapper, timeout=7200, callbacks=None)  
