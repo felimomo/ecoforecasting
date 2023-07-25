@@ -14,11 +14,6 @@ STATIIC_PARAMS = {
 	"input_chunk_length": 356,
 }
 
-# callbacks
-
-early_stopper = EarlyStopping("train_loss", min_delta=0.0001, patience=5, verbose=True)
-callbacks = [early_stopper] + [PyTorchLightningPruningCallback(trial, monitor="train_loss")]
-
 # initializing objects
 
 transformer = named_model(model=TransformerModel, model_name="TransformerModel")
@@ -26,5 +21,4 @@ transformer_tuner = hyperparam_tuner(
 	model=transformer,
 	suggest_params_fn=TranformerSugg,
 	static_hyperparams=STATIIC_PARAMS,
-	callbacks=callbacks,
 )
