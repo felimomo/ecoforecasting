@@ -17,6 +17,7 @@ STATIIC_PARAMS = {
 # initializing objects
 
 transformer = named_model(model=TransformerModel, model_name="TransformerModel")
+print(transformer)
 transformer_tuner = hyperparam_tuner(
 	model=transformer,
 	suggest_params_fn=TranformerSugg,
