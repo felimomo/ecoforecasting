@@ -1,4 +1,6 @@
 # ecoforecasting
 
-Initially a playground for testing standard forecasting methods on NEON and NOAA data. `tuning` contains scripts which tune hyperparameters
-for some ML-based forecasting methods.
+Machine Learning-based forecasting methods for NEON data with NOAA covariates. Under construction.
+
+Not published on PyPI yet. To install, clone this repo and run `pip -e install .` at the top directory.
+
