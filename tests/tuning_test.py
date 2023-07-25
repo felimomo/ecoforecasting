@@ -17,10 +17,7 @@ STATIIC_PARAMS = {
 # callbacks
 
 early_stopper = EarlyStopping("train_loss", min_delta=0.0001, patience=5, verbose=True)
-if callbacks is None:
-	callbacks = [early_stopper]
-else:
-	callbacks = [early_stopper] + callbacks
+callbacks = [early_stopper] + [PyTorchLightningPruningCallback(trial, monitor="train_loss")]
 
 # initializing objects
 
