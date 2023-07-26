@@ -96,7 +96,8 @@ class hyperparam_tuner:
 		)
 
 		# eval
-		preds = self.model.predict(series = series, n = len(val_series) )
+		model = self.model
+		preds = model.predict(series = series, n = len(val_series) )
 		metric_values = mse(val_series, preds, n_jobs=-1, verbose=True)
 		mean_metric_value = np.mean(metric_values)
 

@@ -40,7 +40,7 @@ print(f"val series length: {len(SERIES)}")
 
 STATIC_PARAMS = {
 	"batch_size": 1024,
-	"n_epochs": 70,
+	"n_epochs": 30,
 	"nr_epochs_val_period": 1,
 	"input_chunk_length": 356,
 }
