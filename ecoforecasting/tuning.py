@@ -76,12 +76,7 @@ class hyperparam_tuner:
 		fit_kwargs = kwargs.get("fit_kwargs", {})
 
 		fitted_model_instance = self.model_instance(
-			model_name=self.model_name,
-			force_reset=True,
-			save_checkpoints=True,
-			pl_trainer_kwargs=self.pl_trainer_kwargs,
-			**self.static_hyperparams,
-			**variable_hyperparams,
+			variable_hyperparams,
 			**model_kwargs,
 		).fit(
 			series = series,
