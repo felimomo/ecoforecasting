@@ -1,5 +1,5 @@
 from ecoforecasting.tuning import hyperparam_tuner
-from ecoforecasting.named_model import named_model
+from ecoforecasting.named_model import named_model_class
 from ecoforecasting.params_suggestions import TranformerSugg
 from ecoforecasting.data_processing import NOAA_stage3_scan, day_mean_several, quick_neon_series, get_noaa
 
@@ -59,15 +59,16 @@ KWARGS = {"model_kwargs": MODEL_KWARGS, "fit_kwargs": FIT_KWARGS}
 
 # initializing objects
 
-transformer = named_model(model=TransformerModel, model_name="TransformerModel")
+# transformer = named_model_class(model=TransformerModel, model_name="TransformerModel")
 # print(transformer)
 transformer_tuner = hyperparam_tuner(
-	model=transformer,
+	model=TransformerModel,
+	model_name="TransformerModel",
 	suggest_params_fn=TranformerSugg,
 	static_hyperparams=STATIC_PARAMS,
 )
 
-tuned_transformer_instance = transformer_tuner.tuned_model(
+tuned_transformer_instance = transformer_tuner.tuned_model_instance(
 	series = SERIES, 
 	val_series = VAL_SERIES,
 	**KWARGS,
