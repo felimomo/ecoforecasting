@@ -1,0 +1,5 @@
+install.packages("remotes")
+remotes::install_github("eco4cast/neon4cast")
+install.packages("tidyverse")
+install.packages("fable")
+install.packages("tisbble")
