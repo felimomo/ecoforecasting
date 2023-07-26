@@ -1,11 +1,10 @@
-from datetime import datetime
-
 import os
-
-os.makedirs(DATAPATH, exist_ok=True)
+from datetime import datetime
+from typing import Type
 
 from darts.models.forecasting.forecasting_model import ForecastingModel 
-# the base forecasting model class
+# the base forecasting model class, used for type hints only
+from darts import TimeSeries
 
 from ecoforecasting import named_model
 
@@ -27,23 +26,20 @@ class efi_forecaster:
 	""" uses trained/fitted model to produce forecast in EFI NEON format """
 
 	def __init__(
-		self, 
-		model: named_model, 
+		self,  
 		theme: str = "terrestrial",
+		model: Type[ForecastingModel],
+		model_name: str = "ForecastingModel",
 		forecast_horizon: str = "month",
 	):
-		"""
-		model: a named model (wrapper of ForecastingModel)
-		challenge: 'terrestrial', 'aquatics', 'tick', 'phenology', 'beetle'
-		forecast_horizon: 'day', 'week', 'month' [31 days]
-		"""
-		self.model = model.model
-		self.model_name = model.model_name
 		self.theme = theme
+		self.model = model
+		self.model_name = model_name
 		self.forecast_horizon = forecast_horizon
 
 	def csv_forecast(
 		self, 
+		series: TimeSeries,
 		start_datetime: datetime,
 		target_dir: str = os.path.join("..", "data", f"{self.model_name}")
 	):
@@ -51,11 +47,19 @@ class efi_forecaster:
 		produces csv file with the format needed for EFI submissions.
 		"""
 
+		# data path
 		os.makedirs(target_dir, exist_ok=True)
 		fname = f"{self.challenge}-{start_datetime}-{self.model_name}"
 		path_and_fname = os.path.join(target_dir, fname)
 
-		horizon_n = self._get_horizon_n
+		# produce forecast
+		horizon_n = self._get_horizon_n()
+		forecast = self.model.predict(series=series, n=horizon_n)
+
+		# format forecast
+		forecast_df = forecast.pd_dataframe()
+		print(forecast_df.head(10))
+
 
 	def _get_horizon_n(self):
 		""" how many individual predictions in a forecast horizon """

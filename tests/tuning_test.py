@@ -1,5 +1,5 @@
 from ecoforecasting.tuning import hyperparam_tuner
-from ecoforecasting.named_model import named_model_class
+# from ecoforecasting.named_model import named_model_class
 from ecoforecasting.params_suggestions import TranformerSugg
 from ecoforecasting.data_processing import NOAA_stage3_scan, day_mean_several, quick_neon_series, get_noaa
 

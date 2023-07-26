@@ -18,7 +18,7 @@ from ecoforecasting.data_processing import (
 	NOAA_stage3_scan, day_mean_several, quick_neon_series, get_noaa
 )
 
-from ecoforecasting import named_model_class
+# from ecoforecasting import named_model_class
 
 class hyperparam_tuner:
 	""" tunes hyperparameters of a model """
