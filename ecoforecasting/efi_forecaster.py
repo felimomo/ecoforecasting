@@ -6,8 +6,6 @@ from darts.models.forecasting.forecasting_model import ForecastingModel
 # the base forecasting model class, used for type hints only
 from darts import TimeSeries
 
-from ecoforecasting import named_model
-
 NR_PREDS_A_DAY = { #TBD
 	"terrestrial": 1,
 	"aquatics": 1,
