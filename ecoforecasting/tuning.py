@@ -8,7 +8,6 @@ from darts.models.forecasting.forecasting_model import ForecastingModel
 # the base forecasting model class, 
 # used to specify input to hyperparam_tuner
 
-from dataclasses import dataclass
 from typing import Callable
 
 import optuna
@@ -21,14 +20,9 @@ from ecoforecasting.data_processing import (
 	NOAA_stage3_scan, day_mean_several, quick_neon_series, get_noaa
 )
 
-@dataclass
-class named_model:
-	model: ForecastingModel
-	model_name: str
-
 class hyperparam_tuner:
 	""" tunes hyperparameters of a model """
-	
+
 	def __init__(
 		self,
 		model: named_model,
