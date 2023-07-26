@@ -22,8 +22,6 @@ class named_model:
 	model: ForecastingModel
 	model_name: str
 
-
-
 class hyperparam_tuner:
 	""" tunes hyperparameters of a model """
 	def __init__(
@@ -127,7 +125,7 @@ class hyperparam_tuner:
 
 	def tuned_model(self, series, val_series, **kwargs):
 		""" return tuned model """
-		
+
 		opt_variable_hyperparams = self.find_best_params(series, val_series, **kwargs)
 		model_kwargs = kwargs.get("model_kwargs", {})
 
