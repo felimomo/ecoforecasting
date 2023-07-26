@@ -27,15 +27,11 @@ class hyperparam_tuner:
 		model: named_model,
 		suggest_params_fn: Callable,
 		static_hyperparams: dict,
-		max_samples_per_ts: int = 1000,
-		num_workers: int = 4,
 	):
 		self.model = model.model # model whose hyperparams are tuned
 		self.model_name = model.model_name
 		self.suggest_params_fn = suggest_params_fn
 		self.static_hyperparams = static_hyperparams
-		self.max_samples_per_ts = max_samples_per_ts
-		self.num_workers = num_workers
 
 		self.pl_trainer_kwargs = {
 			"accelerator": "gpu",
