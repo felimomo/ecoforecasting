@@ -4,7 +4,9 @@ import pandas as pd
 from darts import TimeSeries
 from darts.utils.missing_values import fill_missing_values
 from darts.metrics import marre, mse
-from darts.models.forecasting.forecasting_model import ForecastingModel # the base forecasting model class
+from darts.models.forecasting.forecasting_model import ForecastingModel 
+# the base forecasting model class, 
+# used to specify input to hyperparam_tuner
 
 from dataclasses import dataclass
 from typing import Callable
@@ -15,7 +17,9 @@ from optuna.integration import PyTorchLightningPruningCallback
 from pytorch_lightning.callbacks import Callback, EarlyStopping
 import torch
 
-from ecoforecasting.data_processing import NOAA_stage3_scan, day_mean_several, quick_neon_series, get_noaa
+from ecoforecasting.data_processing import ( 
+	NOAA_stage3_scan, day_mean_several, quick_neon_series, get_noaa
+)
 
 @dataclass
 class named_model:
@@ -24,6 +28,7 @@ class named_model:
 
 class hyperparam_tuner:
 	""" tunes hyperparameters of a model """
+	
 	def __init__(
 		self,
 		model: named_model,
