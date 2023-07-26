@@ -28,7 +28,7 @@ class hyperparam_tuner:
 		suggest_params_fn: Callable,
 		static_hyperparams: dict,
 	):
-		self.model = model.model() # model whose hyperparams are tuned
+		self.model = model.model # model whose hyperparams are tuned
 		self.model_name = model.model_name
 		self.suggest_params_fn = suggest_params_fn
 		self.static_hyperparams = static_hyperparams
@@ -39,6 +39,20 @@ class hyperparam_tuner:
 			"callbacks": None,
 		}
 	
+	def model_instance(self, variable_hyperparams: dict, **model_kwargs):
+		""" 
+		returns a model instance for given hyperparams and model_kwargs.
+		"""
+		return self.model(
+			model_name=self.model_name,
+			force_reset=True,
+			save_checkpoints=True,
+			pl_trainer_kwargs=self.pl_trainer_kwargs,
+			**self.static_hyperparams,
+			**variable_hyperparams,
+			**model_kwargs,
+		)
+
 	def fit_model(
 		self,
 		series,
@@ -61,7 +75,7 @@ class hyperparam_tuner:
 		model_kwargs = kwargs.get("model_kwargs", {})
 		fit_kwargs = kwargs.get("fit_kwargs", {})
 
-		self.model(
+		fitted_model_instance = self.model_instance(
 			model_name=self.model_name,
 			force_reset=True,
 			save_checkpoints=True,
@@ -74,7 +88,7 @@ class hyperparam_tuner:
 			**fit_kwargs,
 		)
 
-		return self.model
+		return fitted_model_instance
 
 
 	def objective(self, trial, series, val_series, **kwargs):
@@ -89,15 +103,14 @@ class hyperparam_tuner:
 		variable_hyperparams = self.suggest_params_fn(trial)
 
 		# fit
-		self.model = self.fit_model(
+		fitted_model_instance = self.fit_model(
 			series=series,
 			variable_hyperparams=variable_hyperparams, 
 			**kwargs,
 		)
 
 		# eval
-		model = self.model
-		preds = model.predict(series = series, n = len(val_series) )
+		preds = fitted_model_instance.predict(series = series, n = len(val_series) )
 		metric_values = mse(val_series, preds, n_jobs=-1, verbose=True)
 		mean_metric_value = np.mean(metric_values)
 
