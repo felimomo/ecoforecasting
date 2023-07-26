@@ -4,9 +4,6 @@ import pandas as pd
 from darts import TimeSeries
 from darts.utils.missing_values import fill_missing_values
 from darts.metrics import marre, mse
-from darts.models.forecasting.forecasting_model import ForecastingModel 
-# the base forecasting model class, 
-# used to specify input to hyperparam_tuner
 
 from typing import Callable
 
@@ -35,6 +32,7 @@ class hyperparam_tuner:
 	):
 		self.model = model.model # model whose hyperparams are tuned
 		self.model_name = model.model_name
+		self.suggest_params_fn = suggest_params_fn
 		self.static_hyperparams = static_hyperparams
 		self.max_samples_per_ts = max_samples_per_ts
 		self.num_workers = num_workers
