@@ -2,11 +2,28 @@ from dataclasses import dataclass
 from enum import Enum
 from datetime import datetime
 
+import pandas as pd
+
 from ecoforecasting.util import is_theme_assert
+from ecoforecasting.data_processing import quick_neon_series
 
 # using 
 # https://github.com/eco4cast/Forecast_submissions/blob/main/Generate_forecasts/ARIMA/forecast_model.R
 # as 'spiritual guide'
+
+THEME_2_VAR = {
+	"aquatics": ["temperature", "oxygen", "chla"],
+	"terrestrial_daily": ["nee", "le"],
+	"terrestrial_30min": ["nee", "le"],
+	"ticks": ["amblyomma_americanum"],
+	"phenology": ["gcc_90","rcc_90"],
+	"beetles": ["abundance", "richness"]
+}
+
+THEME_2_FREQ = {
+	"aquatics": "D",
+	"terrestrial_daily": "D",
+}
 
 @dataclass
 class dataprod_metadata:
@@ -16,24 +33,25 @@ class dataprod_metadata:
 	is_theme_assert(theme_name)
 
 	def variables(self):
-		if self.theme_name == "aquatics":
-			return ["temperature", "oxygen", "chla"]
-		elif (
-			(self.theme_name == "terrestrial_daily") | 
-			(self.theme_name == "terrestrial_30min")
-		):
-			return ["nee", "le"]
-		elif self.theme_name == "ticks":
-			return ["amblyomma_americanum"]
-		elif self.theme_name == "phenology":
-			return ["gcc_90","rcc_90"]
-		elif self.theme_name == "beetles":
-			return ["abundance", "richness"]
+		return THEME_2_VAR[self.theme_name]
+
+	def frequency(self):
+		if self.theme_name in THEME_2_FREQ.keys():
+			return THEME_2_FREQ[self.theme_name]
 		else:
 			raise ValueError(
-				"forecast_metadata.variables(): unrecognized 'forecast_metadata.theme_name' value."
+				f"forecast_metadata.variables(): '{forecast_metadata.theme_name}' not supported for dataprod_metadata.frequency()."
 			)
 			return []
+
+
+class dataprod:
+	def __init__(self, metadata: dataprod_metadata)
+		self.metadata = metadata
+		# quick_neon_series(
+		# 	site_id = metadata.site_id
+		# )
+
 
 @dataclass
 class forecast_metadata:
