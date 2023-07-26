@@ -92,7 +92,7 @@ class hyperparam_tuner:
 		self.pl_trainer_kwargs["callbacks"] = callback
 
 		# trial hyperparm suggestion
-		variable_params = self.suggest_params_fn(trial)
+		variable_hyperparams = self.suggest_params_fn(trial)
 
 		# fit
 		self.model = self.fit_model(
