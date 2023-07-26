@@ -33,6 +33,8 @@ date_cutoff = pd.Timestamp("2023-06-24")
 PAST_COVARIATES, FUTURE_COVARIATES = noaa_covariates.split_before(date_cutoff)
 SERIES, VAL_SERIES = konz.split_before(date_cutoff)
 
+print(f"training series length: {len(SERIES)}")
+print(f"val series length: {len(SERIES)}")
 
 # fixed hyperparams, other globals
 
