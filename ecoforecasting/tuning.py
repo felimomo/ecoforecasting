@@ -104,8 +104,11 @@ class hyperparam_tuner:
 			**kwargs,
 		)
 
+		out_chunk_ln = variable_hyperparams["output_chunk_length"]
+
+
 		# eval
-		preds = fitted_model_instance.predict(series = series, n = len(val_series) )
+		preds = fitted_model_instance.predict(series = series, n = min(len(val_series), out_chunk_ln) )
 		metric_values = mse(val_series, preds, n_jobs=-1, verbose=True)
 		mean_metric_value = np.mean(metric_values)
 

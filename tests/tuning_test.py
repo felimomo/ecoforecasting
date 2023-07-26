@@ -34,13 +34,13 @@ PAST_COVARIATES, FUTURE_COVARIATES = noaa_covariates.split_before(date_cutoff)
 SERIES, VAL_SERIES = konz.split_before(date_cutoff)
 
 print(f"training series length: {len(SERIES)}")
-print(f"val series length: {len(SERIES)}")
+print(f"val series length: {len(VAL_SERIES)}")
 
 # fixed hyperparams, other globals
 
 STATIC_PARAMS = {
 	"batch_size": 1024,
-	"n_epochs": 30,
+	"n_epochs": 20,
 	"nr_epochs_val_period": 1,
 	"input_chunk_length": 356,
 }
