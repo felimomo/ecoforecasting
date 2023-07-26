@@ -75,8 +75,6 @@ class hyperparam_tuner:
 			**model_kwargs,
 		).fit(
 			series = series,
-			max_samples_per_ts = self.max_samples_per_ts,
-			num_loader_workers = self.num_workers,
 			**fit_kwargs,
 		)
 
