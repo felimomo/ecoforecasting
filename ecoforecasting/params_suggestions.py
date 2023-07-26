@@ -3,15 +3,15 @@
 
 def TranformerSugg(trial):
 	""" darts.models.TransformerModel """
-	d_model_multiplier = trial.suggest_int("d_model_multiplier", 14, 36)
+	d_model_multiplier = trial.suggest_int("d_model_multiplier", 10, 30)
 	n_head = trial.suggest_categorical("nhead", [2, 4])
 	return {
-		"output_chunk_length": trial.suggest_int("output_chunk_length", 15, 35),
+		"output_chunk_length": trial.suggest_int("output_chunk_length", 31, 35),
 		"d_model": d_model_multiplier * n_head,
 		"nhead": n_head,
 		"num_encoder_layers": trial.suggest_int("num_encoder_layers", 2, 4),
 		"num_decoder_layers": trial.suggest_int("num_decoder_layers", 2, 4),
-		"dim_feedforward": trial.suggest_categorical("dim_feedforward", [256, 512, 1024]),
+		"dim_feedforward": trial.suggest_categorical("dim_feedforward", [128, 256, 512]),
 		"dropout": trial.suggest_float("dropout", 0.2, 0.4),
 		"optimizer_kwargs": {"lr": trial.suggest_float("lr", 5e-5, 5e-3, log=True)},
 	}
