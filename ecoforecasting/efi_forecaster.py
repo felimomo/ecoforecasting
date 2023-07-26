@@ -40,11 +40,14 @@ class efi_forecaster:
 	def csv_forecast(
 		self, 
 		series: TimeSeries,
+		site_id: str,
 		start_datetime: datetime,
 		target_dir: str = os.path.join("..", "data", f"{self.model_name}")
-	):
+	) -> None:
 		"""
 		produces csv file with the format needed for EFI submissions.
+
+		series is a time-series at a NEON site with ID = site_id
 		"""
 
 		# data path
@@ -58,6 +61,7 @@ class efi_forecaster:
 
 		# format forecast
 		forecast_df = forecast.pd_dataframe()
+		forecast_df["reference_datetime"] = start_datetime
 		print(forecast_df.head(10))
 
 
