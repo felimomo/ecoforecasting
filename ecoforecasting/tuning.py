@@ -111,4 +111,35 @@ class hyperparam_tuner:
 
 		return mean_metric_value if mean_metric_value != np.nan else float("inf")
 
+	def find_best_params(self, series, val_series, **kwargs):
+		""" perform hyperparameter tuning """
+
+		obj_wrapper = lambda trial: transformer_tuner.objective(
+			trial, 
+			series, 
+			val_series, 
+			model_kwargs = kwargs.get("model_kwargs", {}),
+			fit_kwargs = kwargs.get("fit_kwargs", {}),
+		)
+		study = optuna.create_study(direction="minimize")
+		study.optimize(obj_wrapper, timeout=7200, callbacks=None)
+		return study.best_params
+
+	def tuned_model(self, series, val_series, **kwargs):
+		""" return tuned model """
+		
+		opt_variable_hyperparams = self.find_best_params(series, val_series, **kwargs)
+		model_kwargs = kwargs.get("model_kwargs", {})
+
+		return self.model(
+			model_name=self.model_name,
+			force_reset=True,
+			save_checkpoints=True,
+			pl_trainer_kwargs=self.pl_trainer_kwargs,
+			**self.static_hyperparams,
+			**opt_variable_hyperparams,
+			**model_kwargs,
+		)
+
+
 
