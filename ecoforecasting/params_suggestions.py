@@ -11,7 +11,7 @@ def TranformerSugg(trial):
 		"num_decoder_layers": trial.suggest_int("num_decoder_layers", 2, 4),
 		"dim_feedforward": trial.suggest_categorical("dim_feedforward", [256, 512, 1024]),
 		"dropout": trial.suggest_float("dropout", 0.2, 0.4),
-		"lr": trial.suggest_float("lr", 5e-5, 5e-3, log=True),
+		"optimizer_kwargs": {"lr": trial.suggest_float("lr", 5e-5, 5e-3, log=True)},
 	}
 
 def RFSugg(trial):
@@ -33,5 +33,5 @@ def TFTSugg(trial):
 		"num_attention_heads": trial.suggest_int("num_attention_heads", 3, 5),
 		"hidden_continuous_size": trial.suggest_int("hidden_continuous_size", 6, 10),
 		"dropout": trial.suggest_float("dropout", 0.2, 0.4),
-		"lr": trial.suggest_float("lr", 5e-5, 5e-3, log=True),
+		"optimizer_kwargs": {"lr": trial.suggest_float("lr", 5e-5, 5e-3, log=True)},
 	}

@@ -38,9 +38,8 @@ SERIES, VAL_SERIES = konz.split_before(date_cutoff)
 
 STATIC_PARAMS = {
 	"batch_size": 1024,
-	"max_n_epochs": 70,
+	"n_epochs": 70,
 	"nr_epochs_val_period": 1,
-	"max_samples_per_ts": 1000,
 	"input_chunk_length": 356,
 }
 
@@ -49,7 +48,7 @@ ADD_ENCODERS={
 }
 
 MODEL_KWARGS = {"add_encoders": ADD_ENCODERS}
-FIT_KWARGS = {"past_covariates": PAST_COVARIATES}
+FIT_KWARGS = {"past_covariates": PAST_COVARIATES, "max_samples_per_ts": 1000}
 
 # initializing objects
 
