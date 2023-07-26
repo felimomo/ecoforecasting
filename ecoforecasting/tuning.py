@@ -28,7 +28,7 @@ class hyperparam_tuner:
 		suggest_params_fn: Callable,
 		static_hyperparams: dict,
 	):
-		self.model = model.model # model whose hyperparams are tuned
+		self.model = model.model() # model whose hyperparams are tuned
 		self.model_name = model.model_name
 		self.suggest_params_fn = suggest_params_fn
 		self.static_hyperparams = static_hyperparams
