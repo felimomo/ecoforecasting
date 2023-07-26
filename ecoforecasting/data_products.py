@@ -1,35 +1,19 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import List
 from datetime import datetime
+
+from ecoforecasting.util import is_theme_assert
 
 # using 
 # https://github.com/eco4cast/Forecast_submissions/blob/main/Generate_forecasts/ARIMA/forecast_model.R
 # as 'spiritual guide'
 
-class themes(str, Enum):
-	"""
-	list of possible theme id strings. inheritance from 'str' allows one to compare
-	values as strings.
-	"""
-	aquatics = "aquatics"
-	terrestrial_daily = "terrestrial_daily"
-	terrestrial_30min = "terrestrial_30min"
-	ticks = "ticks"
-	phenology = "phenology"
-	beetles = "beetles"
-
 @dataclass
-class forecast_metadata:
-	theme_name: themes
-	model_id: str
+class dataprod_metadata:
+	theme_name: str
 	site_id: str # not checked right now!
-	reference_datetime: datetime
-	year = datetime.year
-	month = datetime.month
-	day = datetime.day
 
-	assert theme_name in set(themes), f"'theme_name' must be in {[v.value for v in themes]}."
+	is_theme_assert(theme_name)
 
 	def variables(self):
 		if self.theme_name == "aquatics":
@@ -50,6 +34,16 @@ class forecast_metadata:
 				"forecast_metadata.variables(): unrecognized 'forecast_metadata.theme_name' value."
 			)
 			return []
+
+@dataclass
+class forecast_metadata:
+	dataprod_meta: dataprod_metadata
+	model_id: str
+	reference_datetime: datetime
+	#
+	year = datetime.year
+	month = datetime.month
+	day = datetime.day
 
 # @dataclass
 # class forecast_data:

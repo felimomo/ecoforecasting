@@ -31,50 +31,6 @@ def NOAA_stage3_scan(
         # .pivot(index = "datetime", columns = "variable", values = "prediction")
     )
 
-def get_noaa(
-    site_id = "KONZ",
-    day_avg = True,
-    freq = "D"
-):
-    s3 = fs.S3FileSystem(endpoint_override = "data.ecoforecast.org", anonymous = True)
-    path = f"neon4cast-drivers/noaa/gefs-v12/stage3/parquet/"
-    dataset = ds.dataset(path, filesystem=s3, partitioning=["site_id"])
-
-    historic_noaa_full = pl.scan_pyarrow_dataset(dataset) 
-
-    # specialize to a given site, go to pivot
-    historic_noaa = (
-        historic_noaa_full
-        .filter(pl.col("site_id") == site_id)
-        .collect()
-        .pivot(index = "datetime", columns = "variable", values = "prediction")
-    )
-    # historic_noaa["datetime"] = pd.to_datetime(historic_noaa["datetime"])
-    # historic_noaa.with_columns(pl.col("datetime").cast(pl.Datetime).alias("datetime"))
-
-    # thin out
-    historic_noaa = historic_noaa[["datetime", "air_temperature", "air_pressure", "precipitation_flux", "relative_humidity"]]
-
-    # optionally day-average:
-    if day_avg:
-        freq = "D" # override input as safety because only "D" makes sense here
-        historic_noaa_daily = day_mean_several(
-            historic_noaa, 
-            ["air_temperature", "air_pressure", "precipitation_flux", "relative_humidity"]
-        )
-        historic_noaa_daily.columns = ["date", "tmp_avg", "pressure_avg", "precip_flux_avg", "rel_humidity_avg"]
-        return fill_missing_values( 
-            pl_to_series(
-                historic_noaa_daily, time_col = "date", freq = freq
-            )
-        )
-    
-    return fill_missing_values(
-        pl_to_series(
-            historic_noaa, time_col = "datetime", freq = freq
-        )
-    )
-
 def day_mean(df, var_to_avg = "TMP", time_col = "datetime", avg_name = "TMP_day_avg"):
     """
     averages values of the column given over the course of a day
@@ -191,3 +147,53 @@ def quick_neon_series(
     pre, data_series_out = data_series.split_before(start_date)
     
     return data_series_out
+
+
+
+
+
+#################
+
+def get_noaa(
+    site_id = "KONZ",
+    day_avg = True,
+    freq = "D"
+):
+    s3 = fs.S3FileSystem(endpoint_override = "data.ecoforecast.org", anonymous = True)
+    path = f"neon4cast-drivers/noaa/gefs-v12/stage3/parquet/"
+    dataset = ds.dataset(path, filesystem=s3, partitioning=["site_id"])
+
+    historic_noaa_full = pl.scan_pyarrow_dataset(dataset) 
+
+    # specialize to a given site, go to pivot
+    historic_noaa = (
+        historic_noaa_full
+        .filter(pl.col("site_id") == site_id)
+        .collect()
+        .pivot(index = "datetime", columns = "variable", values = "prediction")
+    )
+    # historic_noaa["datetime"] = pd.to_datetime(historic_noaa["datetime"])
+    # historic_noaa.with_columns(pl.col("datetime").cast(pl.Datetime).alias("datetime"))
+
+    # thin out
+    historic_noaa = historic_noaa[["datetime", "air_temperature", "air_pressure", "precipitation_flux", "relative_humidity"]]
+
+    # optionally day-average:
+    if day_avg:
+        freq = "D" # override input as safety because only "D" makes sense here
+        historic_noaa_daily = day_mean_several(
+            historic_noaa, 
+            ["air_temperature", "air_pressure", "precipitation_flux", "relative_humidity"]
+        )
+        historic_noaa_daily.columns = ["date", "tmp_avg", "pressure_avg", "precip_flux_avg", "rel_humidity_avg"]
+        return fill_missing_values( 
+            pl_to_series(
+                historic_noaa_daily, time_col = "date", freq = freq
+            )
+        )
+    
+    return fill_missing_values(
+        pl_to_series(
+            historic_noaa, time_col = "datetime", freq = freq
+        )
+    )
