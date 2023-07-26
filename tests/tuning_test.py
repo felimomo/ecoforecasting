@@ -51,7 +51,7 @@ MODEL_KWARGS = {"add_encoders": ADD_ENCODERS}
 FIT_KWARGS = {
 	"past_covariates": PAST_COVARIATES, 
 	"max_samples_per_ts": 1000, 
-	"num_workers": 4
+	"num_loader_workers": 4,
 }
 
 # initializing objects
