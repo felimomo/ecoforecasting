@@ -46,7 +46,10 @@ class forecast_metadata:
 		elif self.theme_name == "beetles":
 			return ["abundance", "richness"]
 		else:
-			raise ValueError("unrecognized 'forecast_metadata.theme_name' value")
+			raise ValueError(
+				"forecast_metadata.variables(): unrecognized 'forecast_metadata.theme_name' value."
+			)
+			return []
 
 # @dataclass
 # class forecast_data:
