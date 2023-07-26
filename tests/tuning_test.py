@@ -29,7 +29,7 @@ konz = quick_neon_series(
 
 noaa_covariates = get_noaa(site_id = "KONZ")
 
-date_cutoff = pd.Timestamp("2023-06-24")
+date_cutoff = pd.Timestamp("2023-06-01")
 PAST_COVARIATES, FUTURE_COVARIATES = noaa_covariates.split_before(date_cutoff)
 SERIES, VAL_SERIES = konz.split_before(date_cutoff)
 
