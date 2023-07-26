@@ -55,6 +55,7 @@ FIT_KWARGS = {
 	"max_samples_per_ts": 1000, 
 	"num_loader_workers": 4,
 }
+KWARGS = {"model_kwargs": MODEL_KWARGS, "fit_kwargs": FIT_KWARGS}
 
 # initializing objects
 
@@ -66,7 +67,13 @@ transformer_tuner = hyperparam_tuner(
 	static_hyperparams=STATIC_PARAMS,
 )
 
-obj_wrapper = lambda trial: transformer_tuner.objective(trial, SERIES, VAL_SERIES, model_kwargs=MODEL_KWARGS, fit_kwargs=FIT_KWARGS)
+tuned_transformer_instance = transformer_tuner.tuned_model(
+	series = SERIES, 
+	val_series = VAL_SERIES,
+	**KWARGS,
+)
 
-study = optuna.create_study(direction="minimize")
-study.optimize(obj_wrapper, timeout=7200, callbacks=None)  
+# obj_wrapper = lambda trial: transformer_tuner.objective(trial, SERIES, VAL_SERIES, model_kwargs=MODEL_KWARGS, fit_kwargs=FIT_KWARGS)
+
+# study = optuna.create_study(direction="minimize")
+# study.optimize(obj_wrapper, timeout=7200, callbacks=None)  
