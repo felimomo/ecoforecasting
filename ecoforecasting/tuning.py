@@ -117,7 +117,7 @@ class hyperparam_tuner:
 	def find_best_params(self, series, val_series, **kwargs):
 		""" perform hyperparameter tuning """
 
-		obj_wrapper = lambda trial: transformer_tuner.objective(
+		obj_wrapper = lambda trial: self.objective(
 			trial, 
 			series, 
 			val_series, 
