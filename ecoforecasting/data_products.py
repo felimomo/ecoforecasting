@@ -54,15 +54,32 @@ class dataprod_metadata:
 
 
 class dataprod:
-	def __init__(self, metadata: dataprod_metadata, start_date = pd.TimeStamp = pd.TimeStamp("2020-09-25"))
+	""" neon data product """
+
+	def __init__(
+		self, 
+		metadata: dataprod_metadata, 
+		start_date: pd.TimeStamp = pd.TimeStamp("2020-09-25"),
+	):
 		self.metadata = metadata
-		quick_neon_series(
+		self.start_date = start_date
+		self.data = quick_neon_series(
 			site_id = metadata.site_id,
 			link = metadata.data_url(),
 			freq = metadata.frequency(),
 			time_col = metadata.time_col,
 			day_avg = False,
 			start_date = start_date,
+		)
+
+	def use_noaa_cov(self):
+		if self.metadata.frequency() not in ["D"]:
+			raise ValueError(f"NOAA covariates not implemented for '{self.metadata.frequency()}' frequency data")
+		
+		self.noaa_covariates = get_noaa(
+			site_id = self.site_id,
+			day_avg = True,
+			freq = self.metadata.frequency()
 		)
 
 
