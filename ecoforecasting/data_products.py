@@ -20,15 +20,20 @@ THEME_2_VAR = {
 	"beetles": ["abundance", "richness"]
 }
 
-THEME_2_FREQ = {
+THEME_2_FREQ = { # 'offset aliases'
 	"aquatics": "D",
 	"terrestrial_daily": "D",
+	"terrestrial_30min": "min", # there's no 30min offset alias.
+	"ticks": "W",
+	"phenology": "D",
+	"beetles": "W",
 }
 
 @dataclass
 class dataprod_metadata:
 	theme_name: str
 	site_id: str # not checked right now!
+	time_col = "datetime" # I guess that'll always be the case
 
 	is_theme_assert(theme_name)
 
@@ -40,17 +45,25 @@ class dataprod_metadata:
 			return THEME_2_FREQ[self.theme_name]
 		else:
 			raise ValueError(
-				f"forecast_metadata.variables(): '{forecast_metadata.theme_name}' not supported for dataprod_metadata.frequency()."
+				f"forecast_metadata.variables(): '{forecast_metadata.theme_name}' not currently supported for dataprod_metadata.frequency()."
 			)
 			return []
 
+	def data_url(self):
+		return f"https://data.ecoforecast.org/neon4cast-targets/{self.theme_name}/{self.theme_name}-targets.csv.gz"
+
 
 class dataprod:
-	def __init__(self, metadata: dataprod_metadata)
+	def __init__(self, metadata: dataprod_metadata, start_date = pd.TimeStamp = pd.TimeStamp("2020-09-25"))
 		self.metadata = metadata
-		# quick_neon_series(
-		# 	site_id = metadata.site_id
-		# )
+		quick_neon_series(
+			site_id = metadata.site_id,
+			link = metadata.data_url(),
+			freq = metadata.frequency(),
+			time_col = metadata.time_col,
+			day_avg = False,
+			start_date = 
+		)
 
 
 @dataclass
