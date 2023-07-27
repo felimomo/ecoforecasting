@@ -62,7 +62,7 @@ class dataprod:
 			freq = metadata.frequency(),
 			time_col = metadata.time_col,
 			day_avg = False,
-			start_date = 
+			start_date = start_date,
 		)
 
 
